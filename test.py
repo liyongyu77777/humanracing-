@@ -69,9 +69,16 @@ mse = mean_squared_error(y_test, y_pred)
 print(f'Random Forest Mean Squared Error: {mse}')
 
 # 特征重要性
+# 获取预处理后的特征名称
+preprocessor.fit(X_train)
+preprocessed_features = preprocessor.get_feature_names_out()
+
+# 获取RFE选择的特征
+selected_features = preprocessed_features[rfe.support_]
+
+# 获取特征重要性
 feature_importances = pipeline.named_steps['regressor'].feature_importances_
-features = X.columns[rfe.support_]
-importance_df = pd.DataFrame({'Feature': features, 'Importance': feature_importances})
+importance_df = pd.DataFrame({'Feature': selected_features, 'Importance': feature_importances})
 importance_df = importance_df.sort_values(by='Importance', ascending=False)
 print(importance_df)
 
